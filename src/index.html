@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Threejs Points 3D Mofing</title>
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div id="webgl"></div>
+<div class="s s-1"></div>
+<div class="s s-2"></div>
+<div class="s s-3"></div>
+<div class="s s-4"></div>
+<div class="s s-5"></div>
+
+
+  <!-- vertexShader -->
+  <script id="js-vertex-shader" type="x-shader/x-vertex">
+  attribute vec3 position;
+  attribute vec3 secPosition;
+  attribute vec3 thirdPosition;
+  attribute vec3 forthPosition;
+  attribute vec3 fivePosition;
+  uniform float u_sec1;
+  uniform float u_sec2;
+  uniform float u_sec3;
+  uniform float u_sec4;
+  uniform mat4 modelViewMatrix;
+  uniform mat4 projectionMatrix;
+
+  void main() {
+  vec3 toTorus = mix(position, secPosition, u_sec1);
+  vec3 toTorusKnot = mix(toTorus, thirdPosition, u_sec2);
+  vec3 toCylinder = mix(toTorusKnot, forthPosition, u_sec3);
+  vec3 finalPos = mix(toCylinder, fivePosition, u_sec4);
+
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(finalPos, 1.0 );
+  gl_PointSize = 3.0;
+  }
+  </script>
+
+  <!-- fragmentShader -->
+  <script id="js-fragment-shader" type="x-shader/x-fragment">
+  precision mediump float;
+
+  void main() {
+      vec2 temp = gl_PointCoord - vec2(0.5);
+      float f = dot(temp, temp);
+      if (f > 0.25 ) {
+          discard;
+      }
+      gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+  }
+  </script>
+  <!-- partial -->
+  <script src='https://unpkg.co/gsap@3/dist/gsap.min.js'></script>
+  <script src='https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r122/three.min.js'></script>
+  <script src='https://cdn.jsdelivr.net/npm/three@0.131.3/examples/js/math/MeshSurfaceSampler.js'></script>
+
+</body>
+</html>
